@@ -45,7 +45,7 @@ exports.scheduleEmail = async (req, res, next) => {
 const sendEmail = async (email) => {
   try {
     const { recipient, subject, body } = email;
-
+//create a transporter
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.sendinblue.com",
       port: 587,
@@ -119,8 +119,7 @@ exports.deleteScheduleEmail = async (req, res, next) => {
     if (job) {
       job.cancel();
     }
-    
-    console.log(deleteEmail,"%%")
+   
     res.json({message:"Scheduled email deleted successfully"})
   } catch (err) {
     res.status(500).json({message:"Failed to delete schedule email"})

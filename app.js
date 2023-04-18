@@ -1,16 +1,17 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const nodeMailer = require("nodemailer")
 
 const dotenv =  require("dotenv");
 const mongoose = require("mongoose");
 const app = express();
 
-const emailRoute = require("./Routes/email")
 dotenv.config();
+const emailRoute = require("./Routes/email")
 app.use(bodyParser.json());
 
 app.use('/api',emailRoute);
+
+//connecting to mongoDb
 
 mongoose.connect(process.env.MONGODB_URL)
     .then(() => {
