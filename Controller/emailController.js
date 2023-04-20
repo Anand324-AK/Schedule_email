@@ -18,34 +18,30 @@ exports.scheduleEmail = async (req, res, next) => {
     const recipient = req.body.recipient;
     const subject = req.body.subject;
     const body = req.body.body;
-    const scheduledTime = req.body.scheduledTime;
-
+    const scheduledTime = new Date(req.body.scheduledTime);
     const email = new Emails({
       recipient: recipient,
       subject: subject,
       body: body,
       scheduledTime: scheduledTime
     });
-    await email.save();
-    schedule.scheduleJob(new Date(scheduledTime), () => {
-      try {
-        sendEmail(email);
-      } catch (err) {
-        console.log("Failed to send email");
-      }
-    });
+    await email.save();    
+    schedule.scheduleJob(new Date(scheduledTime),function(){
+      sendEmail(email)
+    })
     res
       .status(201)
       .json({ message: "Email scheduled successfully", email: email });
+   
   } catch (err) {
-    res.send(500).json({ message: "Failed to schedule email" });
+    console.log({ message: "Failed to schedule email" });
   }
 };
 
 const sendEmail = async (email) => {
   try {
     const { recipient, subject, body } = email;
-//create a transporter
+    //create a transporter
     const transporter = nodemailer.createTransport({
       host: "smtp-relay.sendinblue.com",
       port: 587,
@@ -119,9 +115,9 @@ exports.deleteScheduleEmail = async (req, res, next) => {
     if (job) {
       job.cancel();
     }
-   
-    res.json({message:"Scheduled email deleted successfully"})
+
+    res.json({ message: "Scheduled email deleted successfully" });
   } catch (err) {
-    res.status(500).json({message:"Failed to delete schedule email"})
+    res.status(500).json({ message: "Failed to delete schedule email" });
   }
 };

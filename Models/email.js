@@ -15,7 +15,7 @@ const emailSchema = new Schema({
     required: true
   },
   scheduledTime: {
-    type: String,
+    type: Date,
     required: true
   },
   status: {
